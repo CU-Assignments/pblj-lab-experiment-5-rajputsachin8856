@@ -1,37 +1,46 @@
-Java program that serializes and deserializes a Student object. It saves the Student object to a file and then reads it back, displaying the student details.
-The program handles exceptions like FileNotFoundException, IOException, and ClassNotFoundException.
+```java
+import java.io.*;
 
-Steps:
-1. Create a Student class with id, name, and GPA.
-2. Serialize the Student object: Convert the object to a byte stream and save it to a file.
-3. Deserialize the Student object: Read the byte stream from the file and convert it back into an object.
-4. Exception handling: Handle possible exceptions such as FileNotFoundException, IOException, and ClassNotFoundException.
+class Student implements Serializable {
+    int id;
+    String name;
+    double gpa;
 
+    public Student(int id, String name, double gpa) {
+        this.id = id;
+        this.name = name;
+        this.gpa = gpa;
+    }
+}
 
-----Implementation
----Student Class: The Student class implements the Serializable interface, allowing it to be serialized. It has three fields: id, name, and gpa.
----serializeStudent(): This method serializes a Student object to a file using ObjectOutputStream. The object is written to a file named student.ser.
----deserializeStudent(): This method deserializes the Student object from the file using ObjectInputStream. If successful, it returns the deserialized Student object.
----Exception Handling: The program handles FileNotFoundException, IOException, and ClassNotFoundException during the serialization and deserialization processes.
+public class StudentSerialization {
+    public static void main(String[] args) {
+        Student student = new Student(1, "John Doe", 3.8);
+        String fileName = "student.ser";
 
+        try {
+            FileOutputStream fileOut = new FileOutputStream(fileName);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(student);
+            out.close();
+            fileOut.close();
 
+            FileInputStream fileIn = new FileInputStream(fileName);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            Student deserializedStudent = (Student) in.readObject();
+            in.close();
+            fileIn.close();
 
-Test Cases:
-
-Test Case 1: Serialize and Deserialize a valid student object.
-  
-Input: Student(1, "John Doe", 3.75)
-Expected Output:
-Student object has been serialized and saved to file.
-Student object has been deserialized.
-Deserialized Student Details:
-Student ID: 1, Name: John Doe, GPA: 3.75
-  
-Test Case 2: Try to deserialize from a non-existent file.
-Expected Output:
-Error: File not found.
-  
-Test Case 3: Handle invalid class during deserialization.
-Input: Manually modify the class file to simulate a ClassNotFoundException.
-Expected Output:
-Error: Class not found.
+            System.out.println("Student ID: " + deserializedStudent.id);
+            System.out.println("Student Name: " + deserializedStudent.name);
+            System.out.println("Student GPA: " + deserializedStudent.gpa);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IO Exception: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found: " + e.getMessage());
+        }
+    }
+}
+```
