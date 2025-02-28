@@ -1,4 +1,3 @@
-```java
 import java.io.*;
 
 class Student implements Serializable {
@@ -43,4 +42,4 @@ public class StudentSerialization {
         }
     }
 }
-```
+
